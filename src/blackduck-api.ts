@@ -86,6 +86,27 @@ export interface VulnerabilityCvssView {
   severity: string
 }
 
+/**
+ * @deprecated replaced by DeveloperScansScanView
+ */
+export interface DeveloperScanComponentResultView extends BlackDuckView {
+  componentName: string
+  componentIdentifier: string
+  policyViolationLicenses: PolicyViolationLicenseView[]
+  policyViolationVulnerabilities: PolicyViolationVulnerabilityView[]
+  versionName: string
+  violatingPolicyNames: string[]
+}
+
+export interface PolicyViolationVulnerabilityView extends BlackDuckView {
+  name: string
+}
+
+export interface PolicyViolationLicenseView extends BlackDuckView {
+  licenseName: string
+}
+
+/////////// BEGIN NEW API ///////////
 export interface DeveloperScansScanView extends BlackDuckView {
   componentIdentifier: string
   componentName: string
@@ -119,6 +140,8 @@ export interface DeveloperScansScanItemsPolicyViolationView {
   name: string
 }
 
+/////////// END NEW API ///////////
+
 export class BlackduckApiService {
   blackduckUrl: string
   blackduckApiToken: string
@@ -134,13 +157,13 @@ export class BlackduckApiService {
     const authorizationHeader: IHeaders = { Authorization: `token ${this.blackduckApiToken}` }
 
     return authenticationClient
-      .post(`${this.blackduckUrl}/api/tokens/authenticate`, '', authorizationHeader)
-      .then(authenticationResponse => authenticationResponse.readBody())
-      .then(responseBody => JSON.parse(responseBody))
-      .then(responseBodyJson => {
-        info('Successfully authenticated with Black Duck')
-        return responseBodyJson.bearerToken
-      })
+        .post(`${this.blackduckUrl}/api/tokens/authenticate`, '', authorizationHeader)
+        .then(authenticationResponse => authenticationResponse.readBody())
+        .then(responseBody => JSON.parse(responseBody))
+        .then(responseBodyJson => {
+          info('Successfully authenticated with Black Duck')
+          return responseBodyJson.bearerToken
+        })
   }
 
   async checkIfEnabledBlackduckPoliciesExist(bearerToken: string): Promise<boolean> {
