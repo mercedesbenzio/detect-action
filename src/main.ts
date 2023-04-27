@@ -5,7 +5,7 @@ import fs from 'fs'
 import { BlackduckApiService, BlackDuckView, DeveloperScansScanView } from './blackduck-api'
 import { createCheck, GitHubCheck } from './github/check'
 import { commentOnPR } from './comment'
-import { ExitCode, setExitCodeOutputs } from './detect/exit-code'
+import { ExitCode, setExitCodeOutputsIfDefined } from './detect/exit-code'
 import { TOOL_NAME, findOrDownloadDetect, runDetect } from './detect/detect-manager'
 import { isPullRequest } from './github/github-context'
 import { BLACKDUCK_API_TOKEN, BLACKDUCK_URL, DETECT_TRUST_CERT, DETECT_VERSION, FAIL_ON_ALL_POLICY_SEVERITIES, OUTPUT_PATH_OVERRIDE, SCAN_MODE } from './inputs'
@@ -87,7 +87,7 @@ export async function runWithPolicyCheck(blackduckPolicyCheck: GitHubCheck): Pro
     setFailed(`Could not execute ${TOOL_NAME} ${DETECT_VERSION}: ${reason}`)
   })
 
-  debug(`Detect exited with code ${detectExitCode}`)
+  setExitCodeOutputsIfDefined(detectExitCode)
 
   if (detectExitCode === undefined) {
     debug(`Could not determine ${TOOL_NAME} exit code. Canceling policy check.`)
@@ -98,8 +98,6 @@ export async function runWithPolicyCheck(blackduckPolicyCheck: GitHubCheck): Pro
     blackduckPolicyCheck.cancelCheck()
     return
   }
-
-  setExitCodeOutputs(detectExitCode)
 
   info(`${TOOL_NAME} executed successfully.`)
 

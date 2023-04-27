@@ -1,4 +1,4 @@
-import { setOutput } from '@actions/core'
+import { info, setOutput } from '@actions/core'
 
 export enum ExitCode {
   SUCCESS = 0, //Detect exited successfully.
@@ -24,7 +24,13 @@ function getExitCodeName(exitCode: number) {
   return ExitCode[exitCode] || 'UNKNOWN'
 }
 
-export function setExitCodeOutputs(exitCode: number) {
-  setOutput('detect-exit-code', exitCode)
-  setOutput('detect-exit-code-name', getExitCodeName(exitCode))
+export function setExitCodeOutputsIfDefined(exitCode: number | void) {
+  let exitCodeName = undefined
+  if (exitCode !== undefined) {
+    exitCodeName = getExitCodeName(exitCode)
+    setOutput('detect-exit-code', exitCode)
+    setOutput('detect-exit-code-name', exitCodeName)
+  }
+  info(`Detect exited with code ${exitCode}`)
+  info(`Detect exited with code name ${exitCodeName}`)
 }
