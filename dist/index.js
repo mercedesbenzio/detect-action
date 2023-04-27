@@ -264,6 +264,7 @@ function createDetectDownloadUrl(repoUrl = DETECT_BINARY_REPO_URL) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.setExitCodeOutputsIfDefined = exports.ExitCode = void 0;
 const core_1 = __nccwpck_require__(2186);
+const detect_manager_1 = __nccwpck_require__(841);
 var ExitCode;
 (function (ExitCode) {
     ExitCode[ExitCode["SUCCESS"] = 0] = "SUCCESS";
@@ -294,8 +295,8 @@ function setExitCodeOutputsIfDefined(exitCode) {
         (0, core_1.setOutput)('detect-exit-code', exitCode);
         (0, core_1.setOutput)('detect-exit-code-name', exitCodeName);
     }
-    (0, core_1.info)(`Detect exited with code ${exitCode}`);
-    (0, core_1.info)(`Detect exited with code name ${exitCodeName}`);
+    (0, core_1.info)(`${detect_manager_1.TOOL_NAME} exited with code ${exitCode}`);
+    (0, core_1.info)(`${detect_manager_1.TOOL_NAME} exited with code name ${exitCodeName}`);
 }
 exports.setExitCodeOutputsIfDefined = setExitCodeOutputsIfDefined;
 

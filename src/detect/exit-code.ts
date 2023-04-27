@@ -1,4 +1,5 @@
 import { info, setOutput } from '@actions/core'
+import { TOOL_NAME } from './detect-manager'
 
 export enum ExitCode {
   SUCCESS = 0, //Detect exited successfully.
@@ -31,6 +32,6 @@ export function setExitCodeOutputsIfDefined(exitCode: number | void) {
     setOutput('detect-exit-code', exitCode)
     setOutput('detect-exit-code-name', exitCodeName)
   }
-  info(`Detect exited with code ${exitCode}`)
-  info(`Detect exited with code name ${exitCodeName}`)
+  info(`${TOOL_NAME} exited with code ${exitCode}`)
+  info(`${TOOL_NAME} exited with code name ${exitCodeName}`)
 }
