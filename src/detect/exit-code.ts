@@ -21,7 +21,7 @@ export enum ExitCode {
   FAILURE_UNKNOWN_ERROR = 100 //Detect encountered an unknown error.
 }
 
-function getExitCodeName(exitCode: number) {
+export function getExitCodeName(exitCode: number) {
   return ExitCode[exitCode] || 'UNKNOWN'
 }
 
@@ -32,6 +32,5 @@ export function setExitCodeOutputsIfDefined(exitCode: number | void) {
     setOutput('detect-exit-code', exitCode)
     setOutput('detect-exit-code-name', exitCodeName)
   }
-  info(`${TOOL_NAME} exited with code ${exitCode}`)
-  info(`${TOOL_NAME} exited with code name ${exitCodeName}`)
+  info(`${TOOL_NAME} exited with code ${exitCode} - ${exitCodeName}`)
 }

@@ -5,7 +5,7 @@ import fs from 'fs'
 import { BlackduckApiService, BlackDuckView, DeveloperScansScanView } from './blackduck-api'
 import { createCheck, GitHubCheck } from './github/check'
 import { commentOnPR } from './comment'
-import { ExitCode, setExitCodeOutputsIfDefined } from './detect/exit-code'
+import { ExitCode, getExitCodeName, setExitCodeOutputsIfDefined } from './detect/exit-code'
 import { TOOL_NAME, findOrDownloadDetect, runDetect } from './detect/detect-manager'
 import { isPullRequest } from './github/github-context'
 import { BLACKDUCK_API_TOKEN, BLACKDUCK_URL, DETECT_TRUST_CERT, DETECT_VERSION, FAIL_ON_ALL_POLICY_SEVERITIES, OUTPUT_PATH_OVERRIDE, SCAN_MODE } from './inputs'
@@ -94,7 +94,7 @@ export async function runWithPolicyCheck(blackduckPolicyCheck: GitHubCheck): Pro
     blackduckPolicyCheck.cancelCheck()
     return
   } else if (detectExitCode > 0 && detectExitCode != ExitCode.FAILURE_POLICY_VIOLATION) {
-    setFailed(`Detect failed with exit code: ${detectExitCode}. Check the logs for more information.`)
+    setFailed(`Detect failed with exit code: ${detectExitCode} - ${getExitCodeName(detectExitCode)}. Check the logs for more information.`)
     blackduckPolicyCheck.cancelCheck()
     return
   }
@@ -158,7 +158,7 @@ export async function runWithPolicyCheck(blackduckPolicyCheck: GitHubCheck): Pro
   }
 
   if (SCAN_MODE !== 'RAPID' && detectExitCode > 0) {
-    setFailed(`Detect exited with code ${detectExitCode}. See Detect output for more information.`)
+    setFailed(`Detect exited with code ${detectExitCode} - ${getExitCodeName(detectExitCode)}. See Detect output for more information.`)
   }
 }
 

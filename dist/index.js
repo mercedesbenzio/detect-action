@@ -262,7 +262,7 @@ function createDetectDownloadUrl(repoUrl = DETECT_BINARY_REPO_URL) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.setExitCodeOutputsIfDefined = exports.ExitCode = void 0;
+exports.setExitCodeOutputsIfDefined = exports.getExitCodeName = exports.ExitCode = void 0;
 const core_1 = __nccwpck_require__(2186);
 const detect_manager_1 = __nccwpck_require__(841);
 var ExitCode;
@@ -288,6 +288,7 @@ var ExitCode;
 function getExitCodeName(exitCode) {
     return ExitCode[exitCode] || 'UNKNOWN';
 }
+exports.getExitCodeName = getExitCodeName;
 function setExitCodeOutputsIfDefined(exitCode) {
     let exitCodeName = undefined;
     if (exitCode !== undefined) {
@@ -295,8 +296,7 @@ function setExitCodeOutputsIfDefined(exitCode) {
         (0, core_1.setOutput)('detect-exit-code', exitCode);
         (0, core_1.setOutput)('detect-exit-code-name', exitCodeName);
     }
-    (0, core_1.info)(`${detect_manager_1.TOOL_NAME} exited with code ${exitCode}`);
-    (0, core_1.info)(`${detect_manager_1.TOOL_NAME} exited with code name ${exitCodeName}`);
+    (0, core_1.info)(`${detect_manager_1.TOOL_NAME} exited with code ${exitCode} - ${exitCodeName}`);
 }
 exports.setExitCodeOutputsIfDefined = setExitCodeOutputsIfDefined;
 
@@ -782,7 +782,7 @@ function runWithPolicyCheck(blackduckPolicyCheck) {
             return;
         }
         else if (detectExitCode > 0 && detectExitCode != exit_code_1.ExitCode.FAILURE_POLICY_VIOLATION) {
-            (0, core_1.setFailed)(`Detect failed with exit code: ${detectExitCode}. Check the logs for more information.`);
+            (0, core_1.setFailed)(`Detect failed with exit code: ${detectExitCode} - ${(0, exit_code_1.getExitCodeName)(detectExitCode)}. Check the logs for more information.`);
             blackduckPolicyCheck.cancelCheck();
             return;
         }
@@ -839,7 +839,7 @@ function runWithPolicyCheck(blackduckPolicyCheck) {
             (0, core_1.info)('None of your dependencies violate your Black Duck policies!');
         }
         if (inputs_1.SCAN_MODE !== 'RAPID' && detectExitCode > 0) {
-            (0, core_1.setFailed)(`Detect exited with code ${detectExitCode}. See Detect output for more information.`);
+            (0, core_1.setFailed)(`Detect exited with code ${detectExitCode} - ${(0, exit_code_1.getExitCodeName)(detectExitCode)}. See Detect output for more information.`);
         }
     });
 }

@@ -285,7 +285,8 @@ After running detect this action will set the following output variables with de
 - `detect-exit-code` - A number indicating Detect exit code.
 - `detect-exit-code-name` - The corresponding human name of the error code.
 
-Note that if Detect is not called these variables are not populated.
+Note that if Detect is not called these variables are not populated. Also, if a mapping for the exit code number is not
+found on our side `detect-exit-code-name` will be setted to the value `UNKOWN`.
 
 ## Include Custom Certificates (Optional)
 
