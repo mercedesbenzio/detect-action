@@ -278,6 +278,15 @@ Please refer to the [Detect documentation on this topic](https://community.synop
 
 When passing the properties `DETECT_DIAGNOSTIC` or `DETECT_DIAGNOSTIC_EXTENDED` as environment variables, the action will helpfully upload the zip as a build artifact for convenient troubleshooting. Note: These properties must be set to `true` or `false` (rather than `1`) when using the action.
 
+### Detect Exit Code output
+
+After running detect this action will set the following output variables with detect exit code information:
+
+- `detect-exit-code` - A number indicating Detect exit code.
+- `detect-exit-code-name` - The corresponding human name of the error code.
+
+Note that if Detect is not called these variables are not populated.
+
 ## Include Custom Certificates (Optional)
 
 To include one or more certificates, set `NODE_EXTRA_CA_CERTS` to the certificate file-path(s) in the environment. 

@@ -256,15 +256,42 @@ function createDetectDownloadUrl(repoUrl = DETECT_BINARY_REPO_URL) {
 
 /***/ }),
 
-/***/ 3062:
-/***/ ((__unused_webpack_module, exports) => {
+/***/ 3539:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.POLICY_SEVERITY = exports.SUCCESS = void 0;
-exports.SUCCESS = 0;
-exports.POLICY_SEVERITY = 3;
+exports.setExitCodeOutputs = exports.ExitCode = void 0;
+const core_1 = __nccwpck_require__(2186);
+var ExitCode;
+(function (ExitCode) {
+    ExitCode[ExitCode["SUCCESS"] = 0] = "SUCCESS";
+    ExitCode[ExitCode["FAILURE_BLACKDUCK_CONNECTIVITY"] = 1] = "FAILURE_BLACKDUCK_CONNECTIVITY";
+    ExitCode[ExitCode["FAILURE_TIMEOUT"] = 2] = "FAILURE_TIMEOUT";
+    ExitCode[ExitCode["FAILURE_POLICY_VIOLATION"] = 3] = "FAILURE_POLICY_VIOLATION";
+    ExitCode[ExitCode["FAILURE_PROXY_CONNECTIVITY"] = 4] = "FAILURE_PROXY_CONNECTIVITY";
+    ExitCode[ExitCode["FAILURE_DETECTOR"] = 5] = "FAILURE_DETECTOR";
+    ExitCode[ExitCode["FAILURE_SCAN"] = 6] = "FAILURE_SCAN";
+    ExitCode[ExitCode["FAILURE_CONFIGURATION"] = 7] = "FAILURE_CONFIGURATION";
+    ExitCode[ExitCode["FAILURE_DETECTOR_REQUIRED"] = 9] = "FAILURE_DETECTOR_REQUIRED";
+    ExitCode[ExitCode["FAILURE_BLACKDUCK_VERSION_NOT_SUPPORTED"] = 10] = "FAILURE_BLACKDUCK_VERSION_NOT_SUPPORTED";
+    ExitCode[ExitCode["FAILURE_BLACKDUCK_FEATURE_ERROR"] = 11] = "FAILURE_BLACKDUCK_FEATURE_ERROR";
+    ExitCode[ExitCode["FAILURE_MINIMUM_INTERVAL_NOT_MET"] = 13] = "FAILURE_MINIMUM_INTERVAL_NOT_MET";
+    ExitCode[ExitCode["FAILURE_IAC"] = 14] = "FAILURE_IAC";
+    ExitCode[ExitCode["FAILURE_ACCURACY_NOT_MET"] = 15] = "FAILURE_ACCURACY_NOT_MET";
+    ExitCode[ExitCode["FAILURE_IMAGE_NOT_AVAILABLE"] = 20] = "FAILURE_IMAGE_NOT_AVAILABLE";
+    ExitCode[ExitCode["FAILURE_GENERAL_ERROR"] = 99] = "FAILURE_GENERAL_ERROR";
+    ExitCode[ExitCode["FAILURE_UNKNOWN_ERROR"] = 100] = "FAILURE_UNKNOWN_ERROR"; //Detect encountered an unknown error.
+})(ExitCode = exports.ExitCode || (exports.ExitCode = {}));
+function getExitCodeName(exitCode) {
+    return ExitCode[exitCode] || 'UNKNOWN';
+}
+function setExitCodeOutputs(exitCode) {
+    (0, core_1.setOutput)('detect-exit-code', exitCode);
+    (0, core_1.setOutput)('detect-exit-code-name', getExitCodeName(exitCode));
+}
+exports.setExitCodeOutputs = setExitCodeOutputs;
 
 
 /***/ }),
@@ -661,7 +688,7 @@ const fs_1 = __importDefault(__nccwpck_require__(5747));
 const blackduck_api_1 = __nccwpck_require__(7495);
 const check_1 = __nccwpck_require__(710);
 const comment_1 = __nccwpck_require__(1667);
-const exit_codes_1 = __nccwpck_require__(3062);
+const exit_code_1 = __nccwpck_require__(3539);
 const detect_manager_1 = __nccwpck_require__(841);
 const github_context_1 = __nccwpck_require__(4915);
 const inputs_1 = __nccwpck_require__(6180);
@@ -747,11 +774,12 @@ function runWithPolicyCheck(blackduckPolicyCheck) {
             blackduckPolicyCheck.cancelCheck();
             return;
         }
-        else if (detectExitCode > 0 && detectExitCode != exit_codes_1.POLICY_SEVERITY) {
+        else if (detectExitCode > 0 && detectExitCode != exit_code_1.ExitCode.FAILURE_POLICY_VIOLATION) {
             (0, core_1.setFailed)(`Detect failed with exit code: ${detectExitCode}. Check the logs for more information.`);
             blackduckPolicyCheck.cancelCheck();
             return;
         }
+        (0, exit_code_1.setExitCodeOutputs)(detectExitCode);
         (0, core_1.info)(`${detect_manager_1.TOOL_NAME} executed successfully.`);
         let hasPolicyViolations = false;
         if (inputs_1.SCAN_MODE === 'RAPID') {
@@ -764,7 +792,7 @@ function runWithPolicyCheck(blackduckPolicyCheck) {
             const policyViolations = JSON.parse(rawdata.toString());
             hasPolicyViolations = policyViolations.length > 0;
             (0, core_1.debug)(`Policy Violations Present: ${hasPolicyViolations}`);
-            const failureConditionsMet = detectExitCode === exit_codes_1.POLICY_SEVERITY || inputs_1.FAIL_ON_ALL_POLICY_SEVERITIES;
+            const failureConditionsMet = detectExitCode === exit_code_1.ExitCode.FAILURE_POLICY_VIOLATION || inputs_1.FAIL_ON_ALL_POLICY_SEVERITIES;
             const rapidScanReport = yield (0, reporting_1.createRapidScanReportString)(policyViolations, hasPolicyViolations && failureConditionsMet);
             if ((0, github_context_1.isPullRequest)()) {
                 (0, core_1.info)('This is a pull request, commenting...');
@@ -801,7 +829,7 @@ function runWithPolicyCheck(blackduckPolicyCheck) {
         else if (detectExitCode > 0) {
             (0, core_1.warning)('Dependency check failed! See Detect output for more information.');
         }
-        else if (detectExitCode === exit_codes_1.SUCCESS) {
+        else if (detectExitCode === exit_code_1.ExitCode.SUCCESS) {
             (0, core_1.info)('None of your dependencies violate your Black Duck policies!');
         }
         if (inputs_1.SCAN_MODE !== 'RAPID' && detectExitCode > 0) {

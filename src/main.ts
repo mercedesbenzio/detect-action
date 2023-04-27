@@ -1,11 +1,11 @@
-import { info, warning, setFailed, debug, error } from '@actions/core'
+import { info, warning, setFailed, debug, error, setOutput } from '@actions/core'
 import { create } from '@actions/glob'
 import path from 'path'
 import fs from 'fs'
 import { BlackduckApiService, BlackDuckView, DeveloperScansScanView } from './blackduck-api'
 import { createCheck, GitHubCheck } from './github/check'
 import { commentOnPR } from './comment'
-import { POLICY_SEVERITY, SUCCESS } from './detect/exit-codes'
+import { ExitCode, setExitCodeOutputs } from './detect/exit-code'
 import { TOOL_NAME, findOrDownloadDetect, runDetect } from './detect/detect-manager'
 import { isPullRequest } from './github/github-context'
 import { BLACKDUCK_API_TOKEN, BLACKDUCK_URL, DETECT_TRUST_CERT, DETECT_VERSION, FAIL_ON_ALL_POLICY_SEVERITIES, OUTPUT_PATH_OVERRIDE, SCAN_MODE } from './inputs'
@@ -93,11 +93,13 @@ export async function runWithPolicyCheck(blackduckPolicyCheck: GitHubCheck): Pro
     debug(`Could not determine ${TOOL_NAME} exit code. Canceling policy check.`)
     blackduckPolicyCheck.cancelCheck()
     return
-  } else if (detectExitCode > 0 && detectExitCode != POLICY_SEVERITY) {
+  } else if (detectExitCode > 0 && detectExitCode != ExitCode.FAILURE_POLICY_VIOLATION) {
     setFailed(`Detect failed with exit code: ${detectExitCode}. Check the logs for more information.`)
     blackduckPolicyCheck.cancelCheck()
     return
   }
+
+  setExitCodeOutputs(detectExitCode)
 
   info(`${TOOL_NAME} executed successfully.`)
 
@@ -117,7 +119,7 @@ export async function runWithPolicyCheck(blackduckPolicyCheck: GitHubCheck): Pro
     hasPolicyViolations = policyViolations.length > 0
     debug(`Policy Violations Present: ${hasPolicyViolations}`)
 
-    const failureConditionsMet = detectExitCode === POLICY_SEVERITY || FAIL_ON_ALL_POLICY_SEVERITIES
+    const failureConditionsMet = detectExitCode === ExitCode.FAILURE_POLICY_VIOLATION || FAIL_ON_ALL_POLICY_SEVERITIES
     const rapidScanReport = await createRapidScanReportString(policyViolations, hasPolicyViolations && failureConditionsMet)
 
     if (isPullRequest()) {
@@ -153,7 +155,7 @@ export async function runWithPolicyCheck(blackduckPolicyCheck: GitHubCheck): Pro
     warning('Found dependencies violating policy!')
   } else if (detectExitCode > 0) {
     warning('Dependency check failed! See Detect output for more information.')
-  } else if (detectExitCode === SUCCESS) {
+  } else if (detectExitCode === ExitCode.SUCCESS) {
     info('None of your dependencies violate your Black Duck policies!')
   }
 
