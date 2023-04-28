@@ -30,6 +30,11 @@ inputs:
   detect-trust-cert:
     description: 'Acceptable Values: TRUE, FALSE. If TRUE, Detect will trust the Black Duck certificate even if the certificate is not in the keystore.'
     default: 'TRUE'
+outputs:
+  detect-exit-code:
+    description: 'A number indicating Detect exit code'
+  detect-exit-code-name:
+    description: 'The corresponding human name of the error code'
 runs:
   using: 'node12'
   main: 'dist/index.js'
