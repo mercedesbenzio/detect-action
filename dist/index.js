@@ -462,11 +462,34 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.GitHubCheck = exports.createCheck = void 0;
+exports.GitHubCheck = exports.getOrCreateCheck = void 0;
 const core_1 = __nccwpck_require__(2186);
 const github_1 = __nccwpck_require__(5438);
 const github_context_1 = __nccwpck_require__(4915);
 const inputs_1 = __nccwpck_require__(6180);
+function getOrCreateCheck(checkName) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const check = yield getCheck(checkName);
+        if (check)
+            return Promise.resolve(check);
+        return createCheck(checkName);
+    });
+}
+exports.getOrCreateCheck = getOrCreateCheck;
+function getCheck(checkName) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const octokit = (0, github_1.getOctokit)(inputs_1.GITHUB_TOKEN);
+        const head_sha = (0, github_context_1.getSha)();
+        const response = yield octokit.rest.checks.listForRef({
+            owner: github_1.context.repo.owner,
+            repo: github_1.context.repo.repo,
+            ref: head_sha,
+            check_name: checkName
+        });
+        const checkRun = response.data.check_runs.shift();
+        return checkRun ? new GitHubCheck(checkName, checkRun.id) : null;
+    });
+}
 function createCheck(checkName) {
     return __awaiter(this, void 0, void 0, function* () {
         const octokit = (0, github_1.getOctokit)(inputs_1.GITHUB_TOKEN);
@@ -488,7 +511,6 @@ function createCheck(checkName) {
         return new GitHubCheck(checkName, response.data.id);
     });
 }
-exports.createCheck = createCheck;
 class GitHubCheck {
     constructor(checkName, checkRunId) {
         this.checkName = checkName;
@@ -672,7 +694,7 @@ function run() {
     return __awaiter(this, void 0, void 0, function* () {
         let blackduckPolicyCheck;
         try {
-            blackduckPolicyCheck = yield (0, check_1.createCheck)(application_constants_1.CHECK_NAME);
+            blackduckPolicyCheck = yield (0, check_1.getOrCreateCheck)(application_constants_1.CHECK_NAME);
         }
         catch (error) {
             throw error;

@@ -3,7 +3,30 @@ import { context, getOctokit } from '@actions/github'
 import { getSha } from './github-context'
 import { GITHUB_TOKEN } from '../inputs'
 
-export async function createCheck(checkName: string): Promise<GitHubCheck> {
+export async function getOrCreateCheck(checkName: string): Promise<GitHubCheck> {
+  const check = await getCheck(checkName)
+  if (check) return Promise.resolve(check)
+  return createCheck(checkName)
+}
+
+async function getCheck(checkName: string): Promise<GitHubCheck | null> {
+  const octokit = getOctokit(GITHUB_TOKEN)
+
+  const head_sha = getSha()
+
+  const response = await octokit.rest.checks.listForRef({
+    owner: context.repo.owner,
+    repo: context.repo.repo,
+    ref: head_sha,
+    check_name: checkName
+  })
+
+  const checkRun = response.data.check_runs.shift()
+
+  return checkRun ? new GitHubCheck(checkName, checkRun.id) : null
+}
+
+async function createCheck(checkName: string): Promise<GitHubCheck> {
   const octokit = getOctokit(GITHUB_TOKEN)
 
   const head_sha = getSha()

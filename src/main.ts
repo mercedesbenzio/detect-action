@@ -3,7 +3,7 @@ import { create } from '@actions/glob'
 import path from 'path'
 import fs from 'fs'
 import { BlackduckApiService, IBlackduckView, IRapidScanResults } from './blackduck-api'
-import { createCheck, GitHubCheck } from './github/check'
+import { getOrCreateCheck, GitHubCheck } from './github/check'
 import { commentOnPR } from './comment'
 import { POLICY_SEVERITY, SUCCESS } from './detect/exit-codes'
 import { TOOL_NAME, findOrDownloadDetect, runDetect } from './detect/detect-manager'
@@ -16,7 +16,7 @@ import { CHECK_NAME } from './application-constants'
 export async function run() {
   let blackduckPolicyCheck: any
   try {
-    blackduckPolicyCheck = await createCheck(CHECK_NAME)
+    blackduckPolicyCheck = await getOrCreateCheck(CHECK_NAME)
   } catch (error) {
     throw error
   }
