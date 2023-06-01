@@ -506,18 +506,21 @@ function createCheck(checkName) {
         const octokit = (0, github_1.getOctokit)(inputs_1.GITHUB_TOKEN);
         const head_sha = (0, github_context_1.getSha)();
         (0, core_1.info)(`Creating ${checkName}...`);
-        const response = yield octokit.rest.checks.create({
+        const payload = {
             owner: github_1.context.repo.owner,
             repo: github_1.context.repo.repo,
             name: checkName,
             head_sha
-        });
+        };
+        (0, core_1.debug)(`Check payload: ${JSON.stringify(payload)}`);
+        const response = yield octokit.rest.checks.create(payload);
         if (response.status !== 201) {
             (0, core_1.warning)(`Unexpected status code recieved when creating ${checkName}: ${response.status}`);
             (0, core_1.debug)(JSON.stringify(response, null, 2));
         }
         else {
             (0, core_1.info)(`${checkName} created`);
+            (0, core_1.debug)(`Check response: ${JSON.stringify(response.data)}`);
         }
         return new GitHubCheck(checkName, response.data.id);
     });

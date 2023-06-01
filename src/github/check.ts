@@ -9,18 +9,24 @@ export async function createCheck(checkName: string): Promise<GitHubCheck> {
   const head_sha = getSha()
 
   info(`Creating ${checkName}...`)
-  const response = await octokit.rest.checks.create({
+
+  const payload = {
     owner: context.repo.owner,
     repo: context.repo.repo,
     name: checkName,
     head_sha
-  })
+  }
+
+  debug(`Check payload: ${JSON.stringify(payload)}`)
+
+  const response = await octokit.rest.checks.create(payload)
 
   if (response.status !== 201) {
     warning(`Unexpected status code recieved when creating ${checkName}: ${response.status}`)
     debug(JSON.stringify(response, null, 2))
   } else {
     info(`${checkName} created`)
+    debug(`Check response: ${JSON.stringify(response.data)}`)
   }
 
   return new GitHubCheck(checkName, response.data.id)
