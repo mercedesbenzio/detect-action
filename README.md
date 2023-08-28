@@ -106,7 +106,8 @@ It is possible to skip the [Setup Java](#setup-java) step below if you already h
 Ensure that the _Detect Action_ has access to the correct version of Java on its `$PATH` or within the
 [_GitHub Tool Cache_][github-tool-cache].
 
-<h3 id="self-hosted-certs">Certificates</h3>
+### Certificates: Self-Hosted
+
 If your Black Duck server is on a private network, the self-hosted runner has access to that network, and the Black Duck
 server uses custom certificates, then you will likely need to provide a custom certificate to the _Detect Action_.
 To do this:
@@ -114,16 +115,16 @@ To do this:
 1. Store the root certificate on the self-hosted runner. Example location: `/certificates/my_custom_cert.pem`
 2. Set `NODE_EXTRA_CA_CERTS` in the _Detect Action's_ environment:
 
-```yaml
-    - name: Run Synopsys Detect
-      uses: mercedesbenzio/detect-action@main
-      env:
-        NODE_EXTRA_CA_CERTS: /certificates/my_custom_cert.pem
-      with:
-        #...
-```
+    ```yaml
+        - name: Run Synopsys Detect
+          uses: mercedesbenzio/detect-action@main
+          env:
+            NODE_EXTRA_CA_CERTS: /certificates/my_custom_cert.pem
+          with:
+            #...
+    ```
 
-Note: The path to the certificate can be stored in a [_GitHub Secrect_][github-secrets].
+    Note: The path to the certificate can be stored in a [_GitHub Secrect_][github-secrets].
 
 Please reference the section [_Include Custom Certificates (Optional)_](#include-custom-certificates-optional) for more
 information.
@@ -136,7 +137,8 @@ For more information on self-hosted runners, please visit [GitHub's documentatio
 
 GitHub hosted runners are convenient, but can require extra setup when managing sensitive information.
 
-<h3 id="github-hosted-certs">Certificates</h3>
+### Certificates: GitHub-Hosted
+
 Because a GitHub-hosted runner starts with a clean file-system each run, if custom certificate files are needed, they
 must be created in your workflow. There are many ways to do this, two possible ways are:
 
@@ -304,7 +306,7 @@ Passing additional [Detect properties][detect-properties-documentation] can be d
 1. Use individual environment variables
 
     **Example**:
-    
+
     ```yaml
         - name: Synopsys Detect
           uses: mercedesbenzio/detect-action@main
@@ -319,7 +321,7 @@ Passing additional [Detect properties][detect-properties-documentation] can be d
 2. Use the `SPRING_APPLICATION_JSON` environment variable
 
     **Example**:
-    
+
     ```yaml
         - name: Synopsys Detect
           uses: mercedesbenzio/detect-action@main
@@ -372,10 +374,10 @@ Notes:
 ### Troubleshooting Certificates
 
 - Problem: An error saying the file-path to the certificate cannot be read.
-    - Solution: Ensure whitespace and other special characters are properly escaped based on your runner's OS.
+  - Solution: Ensure whitespace and other special characters are properly escaped based on your runner's OS.
 - Problem: An error about missing certificates in the certificate-chain or missing root certificates.
-    - Solution: You may only be including the server's certificate and not the _root CA certificate_. Ensure you are
-      using the _root CA certificate_.
+  - Solution: You may only be including the server's certificate and not the _root CA certificate_. Ensure you are
+        using the _root CA certificate_.
 
 # Policy Checks
 
