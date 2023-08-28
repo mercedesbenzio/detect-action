@@ -295,7 +295,7 @@ See also: [Detect Documentation of Rapid Scan][rapid-scan-documentation].
 ### Additional Action Parameters
 
 - `output-path-override`: Override for where to output Detect files
-    - Default: $RUNNER_TEMP/blackduck/
+  - Default: $RUNNER_TEMP/blackduck/
 
 ### Additional Detect Properties
 
