@@ -5,3 +5,11 @@ MD004:
 # Ordered list item prefix
 MD029:
   style: one
+
+# MD013/line-length
+# - Line length
+MD013:
+  # Number of characters
+  line_length: 120
+  # Include tables
+  tables: false
