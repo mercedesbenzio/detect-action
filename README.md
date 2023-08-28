@@ -228,10 +228,10 @@ information on available parameters, certificate management, and troubleshooting
 Once your project is checked-out, built, and Java is configured, the _Detect Action_ can be run. At minimum for Detect
 to run, provide:
 
-* Black Duck URL (`blackduck-url`)
-* Black Duck API Token (`blackduck-api-token`)
-* Your desired Detect Version (`detect-version`) to execute
-* Your _GITHUB\_TOKEN_ (`github-token`) to comment on Pull Requests or hook into GitHub Checks  (in most cases, this
+- Black Duck URL (`blackduck-url`)
+- Black Duck API Token (`blackduck-api-token`)
+- Your desired Detect Version (`detect-version`) to execute
+- Your _GITHUB\_TOKEN_ (`github-token`) to comment on Pull Requests or hook into GitHub Checks  (in most cases, this
   is `${{ secrets.GITHUB_TOKEN }}`)
 
 ### Choose your Scanning Mode
@@ -241,7 +241,7 @@ repository to Black Duck as a project through use of the `scan-mode` option.
 
 Set the scan mode to:
 
-* **RAPID** (default) if you want to enable the Black Duck policy check and comments on your pull requests, for example:
+- **RAPID** (default) if you want to enable the Black Duck policy check and comments on your pull requests, for example:
 
   ```yaml
   name: 'Example: Policy check all commits and all Pull Requests to main'
@@ -266,7 +266,7 @@ Set the scan mode to:
 **Note**: By default, Detect will only fail on BLOCKER and CRITICAL policy violations. This can be overridden to fail on
 all severities by setting `fail-on-all-policy-severities=true` in the _detect-action_ workflow parameters.
 
-* **INTELLIGENT** if you want to execute a full analysis of Detect and upload your results into a project in Black Duck,
+- **INTELLIGENT** if you want to execute a full analysis of Detect and upload your results into a project in Black Duck,
   for example:
 
   ```yaml
