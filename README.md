@@ -9,8 +9,18 @@
 [detect-properties-documentation]: https://sig-product-docs.synopsys.com/bundle/integrations-detect/page/properties/all-properties.html
 [detect-properties-options]: https://sig-product-docs.synopsys.com/bundle/integrations-detect/page/configuring/othermethods.html
 [branch-protection-rules-documentation]: https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/defining-the-mergeability-of-pull-requests/about-protected-branches#require-status-checks-before-merging
+[synopsys-sig-detect-action]: https://github.com/synopsys-sig/detect-action
+[synopsys-sig-synopys-action]: https://github.com/synopsys-sig/synopsys-action
 
 # Detect Action
+
+> ℹ️ This action is a fork from [`synopsys-sig/detect-action`][synopsys-sig-detect-action].
+> 
+> The repository from synopsys is no longer maintained and was deprecated in favour of a new action
+> [`synopsys-sig/synopsys-action`][synopsys-sig-synopys-action], which is built on top of Synopsys Bridge and has
+> support for several Synopsys tools not focusing only on Black Duck.
+> 
+> In this fork we decided to continue the developments on detect-action, which focus only on Black Duck tool.
 
 ![GitHub tag (latest SemVer)][github-tag]
 
