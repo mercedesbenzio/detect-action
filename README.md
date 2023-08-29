@@ -5,9 +5,9 @@
 [github-tool-cache]: https://docs.github.com/en/enterprise-server@3.0/admin/github-actions/managing-access-to-actions-from-githubcom/setting-up-the-tool-cache-on-self-hosted-runners-without-internet-access
 [github-secrets]: https://docs.github.com/en/actions/security-guides/encrypted-secrets
 [self-hosted-runners-documentation]: https://docs.github.com/en/actions/hosting-your-own-runners/about-self-hosted-runners
-[rapid-scan-documentation]: https://community.synopsys.com/s/document-item?bundleId=integrations-detect&topicId=downloadingandrunning%2Frapidscan.html&_LANG=enus
-[detect-properties-documentation]: https://community.synopsys.com/s/document-item?bundleId=integrations-detect&topicId=properties%2Fall-properties.html&_LANG=enus
-[detect-properties-options]: https://community.synopsys.com/s/document-item?bundleId=integrations-detect&topicId=configuring%2Fothermethods.html&_LANG=enus
+[rapid-scan-documentation]: hhttps://sig-product-docs.synopsys.com/bundle/integrations-detect/page/runningdetect/rapidscan.html
+[detect-properties-documentation]: https://sig-product-docs.synopsys.com/bundle/integrations-detect/page/properties/all-properties.html
+[detect-properties-options]: https://sig-product-docs.synopsys.com/bundle/integrations-detect/page/configuring/othermethods.html
 [branch-protection-rules-documentation]: https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/defining-the-mergeability-of-pull-requests/about-protected-branches#require-status-checks-before-merging
 
 # Detect Action
@@ -65,12 +65,13 @@ jobs:
   security:
     runs-on: my-github-runner
     steps:
-      - uses: actions/checkout@v2
-      - name: Set up Java 11
-        uses: actions/setup-java@v2
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Set up Java 17
+        uses: actions/setup-java@v3
         with:
-          java-version: '11'
-          distribution: 'adopt'
+          java-version: '17'
+          distribution: 'temurin'
       # Because this example is building a Gradle project, it needs to happen after setting up Java
       - name: Grant execute permission for gradlew to build my project
         run: chmod +x gradlew
@@ -86,12 +87,12 @@ jobs:
           policy-name: 'My Black Duck Policy For GitHub Actions'
           no-fail-if-policy-exists: true
       - name: Run Synopsys Detect
-        uses: mercedesbenzio/detect-action@main
+        uses: mercedesbenzio/detect-action@v0.4.0
         env:
           NODE_EXTRA_CA_CERTS: ${{ secrets.LOCAL_CA_CERT_PATH }}
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          detect-version: 7.9.0
+          detect-version: 8.11.0
           blackduck-url: ${{ secrets.BLACKDUCK_URL }}
           blackduck-api-token: ${{ secrets.BLACKDUCK_API_TOKEN }}
 ```
@@ -102,8 +103,8 @@ Using a self-hosted runner provides more flexibility in managing your build envi
 
 ### Java
 
-It is possible to skip the [Setup Java](#setup-java) step below if you already have Java 11 on your self-hosted runner.
-Ensure that the _Detect Action_ has access to the correct version of Java on its `$PATH` or within the
+It is possible to skip the [Set Up Java](#set-up-java) step below if you already have Java 17 on your self-hosted
+runner. Ensure that the _Detect Action_ has access to the correct version of Java on its `$PATH` or within the
 [_GitHub Tool Cache_][github-tool-cache].
 
 ### Certificates: Self-Hosted
@@ -117,14 +118,14 @@ To do this:
 
     ```yaml
         - name: Run Synopsys Detect
-          uses: mercedesbenzio/detect-action@main
+          uses: mercedesbenzio/detect-action@v0.4.0
           env:
             NODE_EXTRA_CA_CERTS: /certificates/my_custom_cert.pem
           with:
             #...
     ```
 
-    Note: The path to the certificate can be stored in a [_GitHub Secrect_][github-secrets].
+    Note: The path to the certificate can be stored in a [_GitHub Secret_][github-secrets].
 
 Please reference the section [_Include Custom Certificates (Optional)_](#include-custom-certificates-optional) for more
 information.
@@ -149,7 +150,10 @@ with that certificate's content:
 
 ```yaml
     - name: Create certificate
-      run: cat <<< "${{secrets.BASE_64_CERTIFICATE_CONTENT}}" > my-cert.pem
+      shell: bash
+      env:
+        BASE_64_CERTIFICATE: ${{ secrets.BASE_64_CERTIFICATE_CONTENT }}
+      run: cat <<< "${BASE_64_CERTIFICATE}" > my-cert.pem
 ```
 
 The file created through one of those options can then be provided as a value for `NODE_EXTRA_CA_CERTS` in the Detect
@@ -157,7 +161,7 @@ Action step:
 
 ```yaml
     - name: Run Synopsys Detect
-      uses: mercedesbenzio/detect-action@main
+      uses: mercedesbenzio/detect-action@v0.4.0
       env:
         NODE_EXTRA_CA_CERTS: ./my-cert.pem
       with:
@@ -169,7 +173,7 @@ Action step:
 Checkout the source-code onto your GitHub Runner with the following _step_:
 
 ```yaml
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 ```
 
 ## Build Your Project
@@ -187,17 +191,16 @@ Action_. For example, here is how this might be done in a Gradle project:
 In the example job above, this needed to be done _after_ setting up Java because Gradle requires Java. If your project
 does not use Java, this step can be done before setting up Java.
 
-## Setup Java
+## Set Up Java
 
-Detect runs using Java 11 and the preferred distribution is from [AdoptOpenJDK](https://github.com/AdoptOpenJDK).
-Configure the _step_ it as follows:
+Detect runs using Java. Configure the _step_ it as follows:
 
 ```yaml
-    - name: Set up JDK 11
-      uses: actions/setup-java@v2
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
       with:
-        java-version: '11'
-        distribution: 'adopt'
+        java-version: '17'
+        distribution: 'temurin'
 ```
 
 ## Create Black Duck Policy (Optional)
@@ -254,7 +257,7 @@ Set the scan mode to:
     push:
   #...
       - name: Run Synopsys Detect
-        uses: mercedesbenzio/detect-action@main
+        uses: mercedesbenzio/detect-action@v0.4.0
         env:
           NODE_EXTRA_CA_CERTS: ${{ secrets.LOCAL_CA_CERT_PATH }}
         with:
@@ -264,10 +267,7 @@ Set the scan mode to:
             blackduck-url: ${{ secrets.BLACKDUCK_URL }}
             blackduck-api-token: ${{ secrets.BLACKDUCK_API_TOKEN }}
   ```
-
-**Note**: By default, Detect will only fail on BLOCKER and CRITICAL policy violations. This can be overridden to fail on
-all severities by setting `fail-on-all-policy-severities=true` in the _detect-action_ workflow parameters.
-
+  
 - **INTELLIGENT** if you want to execute a full analysis of Detect and upload your results into a project in Black Duck,
   for example:
 
@@ -278,7 +278,7 @@ all severities by setting `fail-on-all-policy-severities=true` in the _detect-ac
       - cron:  '0 0 * * *'
   #...
       - name: Run Synopsys Detect
-        uses: mercedesbenzio/detect-action@main
+        uses: mercedesbenzio/detect-action@v0.4.0
         env:
           NODE_EXTRA_CA_CERTS: ${{ secrets.LOCAL_CA_CERT_PATH }}
         with:
@@ -309,7 +309,7 @@ Passing additional [Detect properties][detect-properties-documentation] can be d
 
     ```yaml
         - name: Synopsys Detect
-          uses: mercedesbenzio/detect-action@main
+          uses: mercedesbenzio/detect-action@v0.4.0
           env:
             DETECT_TOOLS: DOCKER
             DETECT_DOCKER_IMAGE_ID: abc123
@@ -324,7 +324,7 @@ Passing additional [Detect properties][detect-properties-documentation] can be d
 
     ```yaml
         - name: Synopsys Detect
-          uses: mercedesbenzio/detect-action@main
+          uses: mercedesbenzio/detect-action@v0.4.0
           env:
             SPRING_APPLICATION_JSON: '{"detect.tools":"DOCKER","detect.docker.image.id":"abc123","detect.docker.path.required":"TRUE"}'
           with:
@@ -350,7 +350,7 @@ After running detect this action will set the following output variables with de
 - `detect-exit-code-name` - The corresponding human name of the error code.
 
 Note that if Detect is not called these variables are not populated. Also, if a mapping for the exit code number is not
-found on our side `detect-exit-code-name` will be setted to the value `UNKOWN`.
+found on our side `detect-exit-code-name` we will set it to `UNKOWN`.
 
 ## Include Custom Certificates (Optional)
 
@@ -364,7 +364,7 @@ Notes:
 
 ```yaml
   - name: Synopsys Detect
-    uses: mercedesbenzio/detect-action@main
+    uses: mercedesbenzio/detect-action@v0.4.0
     env:
       NODE_EXTRA_CA_CERTS: ${{ secrets.LOCAL_CA_CERT_PATH }}
     with:
