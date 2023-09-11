@@ -251,7 +251,7 @@ to run, provide:
 
 - Black Duck URL (`blackduck-url`)
 - Black Duck API Token (`blackduck-api-token`)
-- Your desired Detect Version (`detect-version`) to execute
+- Your desired Detect Version (`detect-version`), or empty if you want to scan using the latest version
 - Your _GITHUB\_TOKEN_ (`github-token`) to comment on Pull Requests or hook into GitHub Checks  (in most cases, this
   is `${{ secrets.GITHUB_TOKEN }}`)
 
