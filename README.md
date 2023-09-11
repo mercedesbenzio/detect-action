@@ -366,7 +366,7 @@ After running detect this action will set the following output variables with de
 - `detect-exit-code-name` - The corresponding human name of the error code.
 
 Note that if Detect is not called these variables are not populated. Also, if a mapping for the exit code number is not
-found on our side `detect-exit-code-name` we will set it to `UNKOWN`.
+found on our side `detect-exit-code-name` we will set it to `UNKNOWN`.
 
 ### Include Custom Certificates (Optional)
 
