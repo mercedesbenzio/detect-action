@@ -36,6 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improve logging
 - Update dependencies and refactor action
 
-[Unreleased]: https://github.com/mercedesbenzio/detect-action/compare/v1.0.0...main
+[Unreleased]: https://github.com/mercedesbenzio/detect-action/compare/v1.1.0...main
+[1.1.0]: https://github.com/mercedesbenzio/detect-action/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/mercedesbenzio/detect-action/compare/v0.4.0...v1.0.0
 [0.4.0]: https://github.com/mercedesbenzio/detect-action/releases/tag/v0.4.0
