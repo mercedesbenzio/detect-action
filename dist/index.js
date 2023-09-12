@@ -25558,12 +25558,12 @@ class DetectFacade {
         }
         return scanJsonPaths;
     }
-    async processRapidScanResult(exitedWithFailurePolicyViolation, outputPath) {
+    async processRapidScanResult(failureConditionsMet, outputPath) {
         core.info(`${detect_tool_downloader_1.TOOL_NAME} executed in ${constants_1.RAPID_SCAN} mode. Beginning reporting...`);
         const scanJsonPaths = await this.getResultsPaths(outputPath);
         await (0, upload_artifacts_1.uploadArtifact)('Rapid Scan JSON', outputPath, scanJsonPaths);
         const reportResult = await this.blackDuckReportGenerator.generateReport(scanJsonPaths[0], {
-            failureConditionsMet: exitedWithFailurePolicyViolation,
+            failureConditionsMet,
             maxSize: MAX_REPORT_SIZE
         });
         if (this.context.isPullRequest()) {
@@ -25577,11 +25577,11 @@ class DetectFacade {
         core.info('Reporting complete.');
         return hasPolicyViolations;
     }
-    async processDetectResult(outputPath, exitedWithFailurePolicyViolation) {
+    async processDetectResult(outputPath, failureConditionsMet) {
         core.info(`${detect_tool_downloader_1.TOOL_NAME} executed successfully.`);
         let hasPolicyViolations = false;
         if (this.inputs.scanMode === constants_1.RAPID_SCAN) {
-            hasPolicyViolations = await this.processRapidScanResult(exitedWithFailurePolicyViolation, outputPath);
+            hasPolicyViolations = await this.processRapidScanResult(failureConditionsMet, outputPath);
         }
         if (this.isDiagnosticModeEnabled()) {
             const diagnosticZip = await this.getDiagnosticFilesPaths(outputPath);
@@ -25623,7 +25623,8 @@ class DetectFacade {
         const isSuccessOrPolicyFailure = detectExitCode === exit_code_1.ExitCode.SUCCESS ||
             detectExitCode === exit_code_1.ExitCode.FAILURE_POLICY_VIOLATION;
         if (isSuccessOrPolicyFailure) {
-            const hasPolicyViolations = await this.processDetectResult(outputPath, detectExitCode === exit_code_1.ExitCode.FAILURE_POLICY_VIOLATION);
+            const hasPolicyViolations = await this.processDetectResult(outputPath, detectExitCode === exit_code_1.ExitCode.FAILURE_POLICY_VIOLATION ||
+                this.inputs.failOnAllPolicySeverities);
             if (hasPolicyViolations) {
                 core.warning('Found dependencies violating policy!');
             }
@@ -26214,6 +26215,7 @@ var Input;
     Input["BLACKDUCK_API_TOKEN"] = "blackduck-api-token";
     Input["DETECT_VERSION"] = "detect-version";
     Input["SCAN_MODE"] = "scan-mode";
+    Input["FAIL_ON_ALL_POLICY_SEVERITIES"] = "fail-on-all-policy-severities";
     Input["OUTPUT_PATH_OVERRIDE"] = "output-path-override";
     Input["DETECT_TRUST_CERTIFICATE"] = "detect-trust-cert";
 })(Input || (exports.Input = Input = {}));
@@ -26223,6 +26225,7 @@ function gatherInputs() {
     const blackDuckApiToken = getInputBlackDuckApiToken();
     const detectVersion = getInputDetectVersion();
     const scanMode = getInputScanMode();
+    const failOnAllPolicySeverities = getInputFailOnAllPolicySeverities();
     const outputPathOverride = getInputOutputPathOverride();
     const detectTrustCertificate = getInputDetectTrustCertificate();
     return {
@@ -26231,6 +26234,7 @@ function gatherInputs() {
         blackDuckApiToken,
         detectVersion,
         scanMode,
+        failOnAllPolicySeverities,
         outputPathOverride,
         detectTrustCertificate
     };
@@ -26250,6 +26254,9 @@ function getInputDetectVersion() {
 }
 function getInputScanMode() {
     return core.getInput(Input.SCAN_MODE).toUpperCase();
+}
+function getInputFailOnAllPolicySeverities() {
+    return core.getBooleanInput(Input.FAIL_ON_ALL_POLICY_SEVERITIES);
 }
 function getInputOutputPathOverride() {
     return core.getInput(Input.OUTPUT_PATH_OVERRIDE);

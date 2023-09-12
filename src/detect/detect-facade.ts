@@ -139,7 +139,7 @@ export class DetectFacade {
   }
 
   private async processRapidScanResult(
-    exitedWithFailurePolicyViolation: boolean,
+    failureConditionsMet: boolean,
     outputPath: string
   ): Promise<boolean> {
     core.info(
@@ -152,7 +152,7 @@ export class DetectFacade {
     const reportResult = await this.blackDuckReportGenerator.generateReport(
       scanJsonPaths[0],
       {
-        failureConditionsMet: exitedWithFailurePolicyViolation,
+        failureConditionsMet,
         maxSize: MAX_REPORT_SIZE
       }
     )
@@ -175,7 +175,7 @@ export class DetectFacade {
 
   private async processDetectResult(
     outputPath: string,
-    exitedWithFailurePolicyViolation: boolean
+    failureConditionsMet: boolean
   ): Promise<boolean> {
     core.info(`${TOOL_NAME} executed successfully.`)
 
@@ -183,7 +183,7 @@ export class DetectFacade {
 
     if (this.inputs.scanMode === RAPID_SCAN) {
       hasPolicyViolations = await this.processRapidScanResult(
-        exitedWithFailurePolicyViolation,
+        failureConditionsMet,
         outputPath
       )
     }
@@ -257,7 +257,8 @@ export class DetectFacade {
     if (isSuccessOrPolicyFailure) {
       const hasPolicyViolations = await this.processDetectResult(
         outputPath,
-        detectExitCode === ExitCode.FAILURE_POLICY_VIOLATION
+        detectExitCode === ExitCode.FAILURE_POLICY_VIOLATION ||
+          this.inputs.failOnAllPolicySeverities
       )
 
       if (hasPolicyViolations) {
