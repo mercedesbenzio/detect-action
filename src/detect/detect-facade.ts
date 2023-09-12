@@ -102,7 +102,10 @@ export class DetectFacade {
       `--detect.scan.output.path=${outputPath}`
     ]
     if (core.isDebug()) {
-      detectArguments.push('--logging.level.detect=DEBUG')
+      detectArguments.push(
+        '--logging.level.detect=DEBUG',
+        '--logging.level.com.synopsys.integration=DEBUG'
+      )
     }
     return detectArguments
   }
