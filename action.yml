@@ -43,6 +43,10 @@ inputs:
       even if the certificate is not in the keystore.
     required: false
     default: 'true'
+  fail-if-detect-fails:
+    description: 'Fail the action if detect exits with an error code'
+    required: false
+    default: 'false'
 outputs:
   detect-exit-code:
     description: 'A number indicating Detect exit code'

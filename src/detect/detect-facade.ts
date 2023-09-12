@@ -102,12 +102,15 @@ export class DetectFacade {
       `--detect.scan.output.path=${outputPath}`
     ]
     if (core.isDebug()) {
-      detectArguments.push(
-        '--logging.level.detect=DEBUG',
-        '--logging.level.com.synopsys.integration=DEBUG'
-      )
+      detectArguments.push('--logging.level.com.synopsys.integration=DEBUG')
     }
     return detectArguments
+  }
+
+  private enableDiagnosticModeIfDebugEnabled(): void {
+    if (core.isDebug()) {
+      process.env[DetectEnvironmentProperties.DETECT_DIAGNOSTIC] = 'true'
+    }
   }
 
   private isDiagnosticModeEnabled(): boolean {
@@ -231,6 +234,7 @@ export class DetectFacade {
   }
 
   async run(): Promise<void> {
+    this.enableDiagnosticModeIfDebugEnabled()
     this.setNodeTlsRejectUnauthorized()
 
     const outputPath = this.getOutputPath()
@@ -275,7 +279,14 @@ export class DetectFacade {
     const isFailureAndNotRapidScan =
       detectExitCode !== ExitCode.SUCCESS && this.inputs.scanMode !== RAPID_SCAN
 
-    if (!isSuccessOrPolicyFailure || isFailureAndNotRapidScan) {
+    const isFailureAndFailIfDetectFails =
+      detectExitCode !== ExitCode.SUCCESS && this.inputs.failIfDetectFails
+
+    if (
+      isFailureAndFailIfDetectFails ||
+      !isSuccessOrPolicyFailure ||
+      isFailureAndNotRapidScan
+    ) {
       throw new Error(
         `Detect failed with exit code: ${detectExitCode} - ${getExitCodeName(
           detectExitCode

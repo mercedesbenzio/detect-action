@@ -25535,9 +25535,14 @@ class DetectFacade {
             `--detect.scan.output.path=${outputPath}`
         ];
         if (core.isDebug()) {
-            detectArguments.push('--logging.level.detect=DEBUG', '--logging.level.com.synopsys.integration=DEBUG');
+            detectArguments.push('--logging.level.com.synopsys.integration=DEBUG');
         }
         return detectArguments;
+    }
+    enableDiagnosticModeIfDebugEnabled() {
+        if (core.isDebug()) {
+            process.env[constants_1.DetectEnvironmentProperties.DETECT_DIAGNOSTIC] = 'true';
+        }
     }
     isDiagnosticModeEnabled() {
         const diagnosticMode = process.env[constants_1.DetectEnvironmentProperties.DETECT_DIAGNOSTIC]?.toLowerCase() === 'true';
@@ -25611,6 +25616,7 @@ class DetectFacade {
         }
     }
     async run() {
+        this.enableDiagnosticModeIfDebugEnabled();
         this.setNodeTlsRejectUnauthorized();
         const outputPath = this.getOutputPath();
         await this.verifyBlackDuckPolicy();
@@ -25636,7 +25642,10 @@ class DetectFacade {
             }
         }
         const isFailureAndNotRapidScan = detectExitCode !== exit_code_1.ExitCode.SUCCESS && this.inputs.scanMode !== constants_1.RAPID_SCAN;
-        if (!isSuccessOrPolicyFailure || isFailureAndNotRapidScan) {
+        const isFailureAndFailIfDetectFails = detectExitCode !== exit_code_1.ExitCode.SUCCESS && this.inputs.failIfDetectFails;
+        if (isFailureAndFailIfDetectFails ||
+            !isSuccessOrPolicyFailure ||
+            isFailureAndNotRapidScan) {
             throw new Error(`Detect failed with exit code: ${detectExitCode} - ${(0, exit_code_1.getExitCodeName)(detectExitCode)}. Check the logs for more information.`);
         }
     }
@@ -26218,6 +26227,7 @@ var Input;
     Input["FAIL_ON_ALL_POLICY_SEVERITIES"] = "fail-on-all-policy-severities";
     Input["OUTPUT_PATH_OVERRIDE"] = "output-path-override";
     Input["DETECT_TRUST_CERTIFICATE"] = "detect-trust-cert";
+    Input["FAIL_IF_DETECT_FAILS"] = "fail-if-detect-fails";
 })(Input || (exports.Input = Input = {}));
 function gatherInputs() {
     const token = getInputGitHubToken();
@@ -26228,6 +26238,7 @@ function gatherInputs() {
     const failOnAllPolicySeverities = getInputFailOnAllPolicySeverities();
     const outputPathOverride = getInputOutputPathOverride();
     const detectTrustCertificate = getInputDetectTrustCertificate();
+    const failIfDetectFails = getInputFailIfDetectFails();
     return {
         token,
         blackDuckUrl,
@@ -26236,7 +26247,8 @@ function gatherInputs() {
         scanMode,
         failOnAllPolicySeverities,
         outputPathOverride,
-        detectTrustCertificate
+        detectTrustCertificate,
+        failIfDetectFails
     };
 }
 exports.gatherInputs = gatherInputs;
@@ -26263,6 +26275,9 @@ function getInputOutputPathOverride() {
 }
 function getInputDetectTrustCertificate() {
     return core.getInput(Input.DETECT_TRUST_CERTIFICATE);
+}
+function getInputFailIfDetectFails() {
+    return core.getBooleanInput(Input.FAIL_IF_DETECT_FAILS);
 }
 
 
