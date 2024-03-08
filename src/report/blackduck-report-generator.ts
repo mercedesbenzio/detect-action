@@ -15,12 +15,13 @@ const HEADER =
   '| Policies Violated | Dependency | License(s) | Vulnerabilities | Short Term Recommended Upgrade | Long Term Recommended Upgrade |'
 const HEADER_ALIGNMENT = '|-|-|-|-|-|-|'
 
-const SUCCESS_COMMENT =
-  '# :white_check_mark: Black Duck - None of your dependencies violate policy!'
+const SUCCESS_COMMENT = `### :white_check_mark: Black Duck
+
+None of your dependencies violate policy!`
 const FAIL_COMMENT = (fail: boolean): string =>
-  `# ${
-    fail ? ':x:' : ':warning:'
-  } Black Duck - Found dependencies violating policy!`
+  `### ${fail ? ':x:' : ':warning:'} Black Duck
+
+  Found dependencies violating policy!`
 
 export class BlackDuckReportGenerator
   implements ReportGenerator<ReportProperties, ReportResult>

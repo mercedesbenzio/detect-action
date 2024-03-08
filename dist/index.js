@@ -26317,8 +26317,12 @@ exports.BlackDuckReportGenerator = void 0;
 const text_builder_1 = __nccwpck_require__(8758);
 const HEADER = '| Policies Violated | Dependency | License(s) | Vulnerabilities | Short Term Recommended Upgrade | Long Term Recommended Upgrade |';
 const HEADER_ALIGNMENT = '|-|-|-|-|-|-|';
-const SUCCESS_COMMENT = '# :white_check_mark: Black Duck - None of your dependencies violate policy!';
-const FAIL_COMMENT = (fail) => `# ${fail ? ':x:' : ':warning:'} Black Duck - Found dependencies violating policy!`;
+const SUCCESS_COMMENT = `### :white_check_mark: Black Duck
+
+None of your dependencies violate policy!`;
+const FAIL_COMMENT = (fail) => `### ${fail ? ':x:' : ':warning:'} Black Duck
+
+  Found dependencies violating policy!`;
 class BlackDuckReportGenerator {
     blackDuckScanReportGenerator;
     constructor(blackDuckScanReportGenerator) {
