@@ -15,13 +15,6 @@ const HEADER =
   '| Policies Violated | Dependency | License(s) | Vulnerabilities | Short Term Recommended Upgrade | Long Term Recommended Upgrade |'
 const HEADER_ALIGNMENT = '|-|-|-|-|-|-|'
 
-const SUCCESS_COMMENT =
-  '# :white_check_mark: Black Duck - None of your dependencies violate policy!'
-const FAIL_COMMENT = (fail: boolean): string =>
-  `# ${
-    fail ? ':x:' : ':warning:'
-  } Black Duck - Found dependencies violating policy!`
-
 export class BlackDuckReportGenerator
   implements ReportGenerator<ReportProperties, ReportResult>
 {
@@ -39,7 +32,10 @@ export class BlackDuckReportGenerator
     textBuilder: TextBuilder,
     properties: ReportProperties
   ): void {
-    textBuilder.addLines(FAIL_COMMENT(properties.failureConditionsMet))
+    const comment = properties.failureConditionsMet
+      ? properties.policyViolationsFoundCommentFailure
+      : properties.policyViolationsFoundCommentWarning
+    textBuilder.addLines(comment)
   }
 
   private addHeaderToTextBuilder(textBuilder: TextBuilder): void {
@@ -78,9 +74,11 @@ export class BlackDuckReportGenerator
     return isContentTruncated
   }
 
-  private async generateSuccessReport(): Promise<ReportResult> {
+  private async generateSuccessReport(
+    properties: ReportProperties
+  ): Promise<ReportResult> {
     return {
-      report: SUCCESS_COMMENT,
+      report: properties.noPolicyViolationsFoundComment,
       failed: false,
       truncated: false,
       hasPolicyViolations: false
@@ -116,7 +114,7 @@ export class BlackDuckReportGenerator
       await this.blackDuckScanReportGenerator.generateReport(path)
     return blackDuckScanReport.hasPolicyViolations
       ? this.generateFailureReport(blackDuckScanReport.reports, properties)
-      : this.generateSuccessReport()
+      : this.generateSuccessReport(properties)
   }
 
   private getViolatedPolicies(violatedPolicies: string[]): string {
