@@ -51,6 +51,25 @@ inputs:
     description: 'Comment pull requests if no violations found'
     required: false
     default: 'true'
+  no-policy-violations-found-comment:
+    description: 'PR comment to post when no policy violations are found'
+    required: false
+    # language=markdown
+    default: |-
+      # ✅ Black Duck - None of your dependencies violate policy!
+  policy-violations-found-comment-warning:
+    description: 'Warning PR comment to post when policy violations are found'
+    required: false
+    # language=markdown
+    default: |-
+      # ⚠️ Black Duck - Found dependencies violating policy!
+  policy-violations-found-comment-failure:
+    description: 'Failure PR comment to post when policy violations are found'
+    required: false
+    # language=markdown
+    default: |-
+      # ❌ Black Duck - Found dependencies violating policy!
+
 outputs:
   detect-exit-code:
     description: 'A number indicating Detect exit code'

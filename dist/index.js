@@ -25568,6 +25568,9 @@ class DetectFacade {
         const scanJsonPaths = await this.getResultsPaths(outputPath);
         await (0, upload_artifacts_1.uploadArtifact)('Rapid Scan JSON', outputPath, scanJsonPaths);
         const reportResult = await this.blackDuckReportGenerator.generateReport(scanJsonPaths[0], {
+            noPolicyViolationsFoundComment: this.inputs.noPolicyViolationsFoundComment,
+            policyViolationsFoundCommentWarning: this.inputs.policyViolationsFoundCommentWarning,
+            policyViolationsFoundCommentFailure: this.inputs.policyViolationsFoundCommentFailure,
             failureConditionsMet,
             maxSize: MAX_REPORT_SIZE
         });
@@ -26231,6 +26234,9 @@ var Input;
     Input["DETECT_TRUST_CERTIFICATE"] = "detect-trust-cert";
     Input["FAIL_IF_DETECT_FAILS"] = "fail-if-detect-fails";
     Input["COMMENT_PR_ON_SUCCESS"] = "comment-pr-on-success";
+    Input["NO_POLICY_VIOLATIONS_FOUND_COMMENT"] = "no-policy-violations-found-comment";
+    Input["POLICY_VIOLATIONS_FOUND_COMMENT_WARNING"] = "policy-violations-found-comment-warning";
+    Input["POLICY_VIOLATIONS_FOUND_COMMENT_FAILURE"] = "policy-violations-found-comment-failure";
 })(Input || (exports.Input = Input = {}));
 function gatherInputs() {
     const token = getInputGitHubToken();
@@ -26243,6 +26249,9 @@ function gatherInputs() {
     const detectTrustCertificate = getInputDetectTrustCertificate();
     const failIfDetectFails = getInputFailIfDetectFails();
     const commentPrOnSuccess = getInputCommentPrOnSuccess();
+    const noPolicyViolationsFoundComment = getNoPolicyViolationsFoundComment();
+    const policyViolationsFoundCommentWarning = getPolicyViolationsFoundCommentWarning();
+    const policyViolationsFoundCommentFailure = getPolicyViolationsFoundCommentFailure();
     return {
         token,
         blackDuckUrl,
@@ -26253,7 +26262,10 @@ function gatherInputs() {
         outputPathOverride,
         detectTrustCertificate,
         failIfDetectFails,
-        commentPrOnSuccess
+        commentPrOnSuccess,
+        noPolicyViolationsFoundComment,
+        policyViolationsFoundCommentWarning,
+        policyViolationsFoundCommentFailure
     };
 }
 exports.gatherInputs = gatherInputs;
@@ -26287,6 +26299,15 @@ function getInputFailIfDetectFails() {
 function getInputCommentPrOnSuccess() {
     return core.getBooleanInput(Input.COMMENT_PR_ON_SUCCESS);
 }
+function getNoPolicyViolationsFoundComment() {
+    return core.getInput(Input.NO_POLICY_VIOLATIONS_FOUND_COMMENT);
+}
+function getPolicyViolationsFoundCommentWarning() {
+    return core.getInput(Input.POLICY_VIOLATIONS_FOUND_COMMENT_WARNING);
+}
+function getPolicyViolationsFoundCommentFailure() {
+    return core.getInput(Input.POLICY_VIOLATIONS_FOUND_COMMENT_FAILURE);
+}
 
 
 /***/ }),
@@ -26317,8 +26338,6 @@ exports.BlackDuckReportGenerator = void 0;
 const text_builder_1 = __nccwpck_require__(8758);
 const HEADER = '| Policies Violated | Dependency | License(s) | Vulnerabilities | Short Term Recommended Upgrade | Long Term Recommended Upgrade |';
 const HEADER_ALIGNMENT = '|-|-|-|-|-|-|';
-const SUCCESS_COMMENT = '# :white_check_mark: Black Duck - None of your dependencies violate policy!';
-const FAIL_COMMENT = (fail) => `# ${fail ? ':x:' : ':warning:'} Black Duck - Found dependencies violating policy!`;
 class BlackDuckReportGenerator {
     blackDuckScanReportGenerator;
     constructor(blackDuckScanReportGenerator) {
@@ -26328,7 +26347,10 @@ class BlackDuckReportGenerator {
         return `| ${line.policiesViolated} | ${line.dependency} | ${line.licenses} | ${line.vulnerabilities} | ${line.shortTermRecommendedUpgrade} | ${line.longTermRecommendedUpdate} |`;
     }
     addTitleToTextBuilder(textBuilder, properties) {
-        textBuilder.addLines(FAIL_COMMENT(properties.failureConditionsMet));
+        const comment = properties.failureConditionsMet
+            ? properties.policyViolationsFoundCommentFailure
+            : properties.policyViolationsFoundCommentWarning;
+        textBuilder.addLines(comment);
     }
     addHeaderToTextBuilder(textBuilder) {
         textBuilder.addLines(HEADER, HEADER_ALIGNMENT);
@@ -26353,9 +26375,9 @@ class BlackDuckReportGenerator {
         }
         return isContentTruncated;
     }
-    async generateSuccessReport() {
+    async generateSuccessReport(properties) {
         return {
-            report: SUCCESS_COMMENT,
+            report: properties.noPolicyViolationsFoundComment,
             failed: false,
             truncated: false,
             hasPolicyViolations: false
@@ -26377,7 +26399,7 @@ class BlackDuckReportGenerator {
         const blackDuckScanReport = await this.blackDuckScanReportGenerator.generateReport(path);
         return blackDuckScanReport.hasPolicyViolations
             ? this.generateFailureReport(blackDuckScanReport.reports, properties)
-            : this.generateSuccessReport();
+            : this.generateSuccessReport(properties);
     }
     getViolatedPolicies(violatedPolicies) {
         return violatedPolicies.join('<br/>');

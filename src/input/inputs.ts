@@ -11,6 +11,9 @@ export interface Inputs {
   detectTrustCertificate: string
   failIfDetectFails: boolean
   commentPrOnSuccess: boolean
+  noPolicyViolationsFoundComment: string
+  policyViolationsFoundCommentWarning: string
+  policyViolationsFoundCommentFailure: string
 }
 
 export enum Input {
@@ -24,7 +27,10 @@ export enum Input {
   OUTPUT_PATH_OVERRIDE = 'output-path-override',
   DETECT_TRUST_CERTIFICATE = 'detect-trust-cert',
   FAIL_IF_DETECT_FAILS = 'fail-if-detect-fails',
-  COMMENT_PR_ON_SUCCESS = 'comment-pr-on-success'
+  COMMENT_PR_ON_SUCCESS = 'comment-pr-on-success',
+  NO_POLICY_VIOLATIONS_FOUND_COMMENT = 'no-policy-violations-found-comment',
+  POLICY_VIOLATIONS_FOUND_COMMENT_WARNING = 'policy-violations-found-comment-warning',
+  POLICY_VIOLATIONS_FOUND_COMMENT_FAILURE = 'policy-violations-found-comment-failure'
 }
 
 export function gatherInputs(): Inputs {
@@ -38,6 +44,11 @@ export function gatherInputs(): Inputs {
   const detectTrustCertificate = getInputDetectTrustCertificate()
   const failIfDetectFails = getInputFailIfDetectFails()
   const commentPrOnSuccess = getInputCommentPrOnSuccess()
+  const noPolicyViolationsFoundComment = getNoPolicyViolationsFoundComment()
+  const policyViolationsFoundCommentWarning =
+    getPolicyViolationsFoundCommentWarning()
+  const policyViolationsFoundCommentFailure =
+    getPolicyViolationsFoundCommentFailure()
   return {
     token,
     blackDuckUrl,
@@ -48,7 +59,10 @@ export function gatherInputs(): Inputs {
     outputPathOverride,
     detectTrustCertificate,
     failIfDetectFails,
-    commentPrOnSuccess
+    commentPrOnSuccess,
+    noPolicyViolationsFoundComment,
+    policyViolationsFoundCommentWarning,
+    policyViolationsFoundCommentFailure
   }
 }
 
@@ -90,4 +104,16 @@ function getInputFailIfDetectFails(): boolean {
 
 function getInputCommentPrOnSuccess(): boolean {
   return core.getBooleanInput(Input.COMMENT_PR_ON_SUCCESS)
+}
+
+function getNoPolicyViolationsFoundComment(): string {
+  return core.getInput(Input.NO_POLICY_VIOLATIONS_FOUND_COMMENT)
+}
+
+function getPolicyViolationsFoundCommentWarning(): string {
+  return core.getInput(Input.POLICY_VIOLATIONS_FOUND_COMMENT_WARNING)
+}
+
+function getPolicyViolationsFoundCommentFailure(): string {
+  return core.getInput(Input.POLICY_VIOLATIONS_FOUND_COMMENT_FAILURE)
 }

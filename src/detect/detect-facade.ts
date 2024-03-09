@@ -155,6 +155,12 @@ export class DetectFacade {
     const reportResult = await this.blackDuckReportGenerator.generateReport(
       scanJsonPaths[0],
       {
+        noPolicyViolationsFoundComment:
+          this.inputs.noPolicyViolationsFoundComment,
+        policyViolationsFoundCommentWarning:
+          this.inputs.policyViolationsFoundCommentWarning,
+        policyViolationsFoundCommentFailure:
+          this.inputs.policyViolationsFoundCommentFailure,
         failureConditionsMet,
         maxSize: MAX_REPORT_SIZE
       }
