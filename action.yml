@@ -56,19 +56,19 @@ inputs:
     required: false
     # language=markdown
     default: |-
-      # ✅ Black Duck - None of your dependencies violate policy!
+      # :white_check_mark: Black Duck - None of your dependencies violate policy!
   policy-violations-found-comment-warning:
     description: 'Warning PR comment to post when policy violations are found'
     required: false
     # language=markdown
     default: |-
-      # ⚠️ Black Duck - Found dependencies violating policy!
+      # :warning: Black Duck - Found dependencies violating policy!
   policy-violations-found-comment-failure:
     description: 'Failure PR comment to post when policy violations are found'
     required: false
     # language=markdown
     default: |-
-      # ❌ Black Duck - Found dependencies violating policy!
+      # :x: Black Duck - Found dependencies violating policy!
 
 outputs:
   detect-exit-code:
