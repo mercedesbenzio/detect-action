@@ -25254,7 +25254,7 @@ exports.ActionOrchestrator = ActionOrchestrator;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ActionsEnvironmentProperties = exports.CHECK_NAME = exports.APPLICATION_NAME = void 0;
 // noinspection SpellCheckingInspection
-exports.APPLICATION_NAME = 'mercedesbenzio/detect-action';
+exports.APPLICATION_NAME = 'tvcsantos/detect-action';
 exports.CHECK_NAME = 'Black Duck Policy Check';
 var ActionsEnvironmentProperties;
 (function (ActionsEnvironmentProperties) {

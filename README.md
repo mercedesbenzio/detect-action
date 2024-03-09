@@ -1,4 +1,4 @@
-[github-tag]: https://img.shields.io/github/v/tag/mercedesbenzio/detect-action?color=blue&label=Latest%20Version&sort=semver
+[github-tag]: https://img.shields.io/github/v/tag/tvcsantos/detect-action?color=blue&label=Latest%20Version&sort=semver
 [branch-protection-rules]: https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/defining-the-mergeability-of-pull-requests/about-protected-branches#require-status-checks-before-merging
 [create-new-github-workflow]: https://docs.github.com/en/actions/learn-github-actions/workflow-syntax-for-github-actions
 [events-that-trigger-workflows]: https://docs.github.com/en/actions/learn-github-actions/events-that-trigger-workflows
@@ -103,7 +103,7 @@ jobs:
           policy-name: 'My Black Duck Policy For GitHub Actions'
           no-fail-if-policy-exists: true
       - name: Run Synopsys Detect
-        uses: mercedesbenzio/detect-action@v1
+        uses: tvcsantos/detect-action@v1
         env:
           NODE_EXTRA_CA_CERTS: ${{ secrets.LOCAL_CA_CERT_PATH }}
         with:
@@ -134,7 +134,7 @@ To do this:
 
     ```yaml
         - name: Run Synopsys Detect
-          uses: mercedesbenzio/detect-action@v1
+          uses: tvcsantos/detect-action@v1
           env:
             NODE_EXTRA_CA_CERTS: /certificates/my_custom_cert.pem
           with:
@@ -177,7 +177,7 @@ Action step:
 
 ```yaml
     - name: Run Synopsys Detect
-      uses: mercedesbenzio/detect-action@v1
+      uses: tvcsantos/detect-action@v1
       env:
         NODE_EXTRA_CA_CERTS: ./my-cert.pem
       with:
@@ -273,7 +273,7 @@ Set the scan mode to:
     push:
   #...
       - name: Run Synopsys Detect
-        uses: mercedesbenzio/detect-action@v1
+        uses: tvcsantos/detect-action@v1
         env:
           NODE_EXTRA_CA_CERTS: ${{ secrets.LOCAL_CA_CERT_PATH }}
         with:
@@ -294,7 +294,7 @@ Set the scan mode to:
       - cron:  '0 0 * * *'
   #...
       - name: Run Synopsys Detect
-        uses: mercedesbenzio/detect-action@v1
+        uses: tvcsantos/detect-action@v1
         env:
           NODE_EXTRA_CA_CERTS: ${{ secrets.LOCAL_CA_CERT_PATH }}
         with:
@@ -325,7 +325,7 @@ Passing additional [Detect properties][detect-properties-documentation] can be d
 
     ```yaml
         - name: Synopsys Detect
-          uses: mercedesbenzio/detect-action@v1
+          uses: tvcsantos/detect-action@v1
           env:
             DETECT_TOOLS: DOCKER
             DETECT_DOCKER_IMAGE_ID: abc123
@@ -340,7 +340,7 @@ Passing additional [Detect properties][detect-properties-documentation] can be d
 
     ```yaml
         - name: Synopsys Detect
-          uses: mercedesbenzio/detect-action@v1
+          uses: tvcsantos/detect-action@v1
           env:
             SPRING_APPLICATION_JSON: '{"detect.tools":"DOCKER","detect.docker.image.id":"abc123","detect.docker.path.required":"TRUE"}'
           with:
@@ -380,7 +380,7 @@ Notes:
 
 ```yaml
   - name: Synopsys Detect
-    uses: mercedesbenzio/detect-action@v1
+    uses: tvcsantos/detect-action@v1
     env:
       NODE_EXTRA_CA_CERTS: ${{ secrets.LOCAL_CA_CERT_PATH }}
     with:

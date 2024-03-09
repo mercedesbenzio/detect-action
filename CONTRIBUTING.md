@@ -327,8 +327,8 @@ This guide was adapted from [weallcontribute](https://www.npmjs.com/package/weal
 [conventional-commits]: https://www.conventionalcommits.org/
 [keep-a-changelog]: https://keepachangelog.com/
 [gitflow]: https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow
-[issues-prs-cleanup]: https://github.com/mercedesbenzio/detect-action/blob/develop/CONTRIBUTING.md#clean-up-issues-and-prs
-[issue-tracker]: https://github.com/mercedesbenzio/detect-action/issues
-[pull-requests]: https://github.com/mercedesbenzio/detect-action/pulls
-[support-open-issues]: https://github.com/mercedesbenzio/detect-action/issues?q=is%3Aopen+is%3Aissue+label%3Asupport
-[unlabeled-open-issues]: https://github.com/mercedesbenzio/detect-action/issues?q=is%3Aopen+is%3Aissue+no%3Alabel
+[issues-prs-cleanup]: https://github.com/tvcsantos/detect-action/blob/develop/CONTRIBUTING.md#clean-up-issues-and-prs
+[issue-tracker]: https://github.com/tvcsantos/detect-action/issues
+[pull-requests]: https://github.com/tvcsantos/detect-action/pulls
+[support-open-issues]: https://github.com/tvcsantos/detect-action/issues?q=is%3Aopen+is%3Aissue+label%3Asupport
+[unlabeled-open-issues]: https://github.com/tvcsantos/detect-action/issues?q=is%3Aopen+is%3Aissue+no%3Alabel
