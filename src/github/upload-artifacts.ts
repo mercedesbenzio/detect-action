@@ -1,34 +1,31 @@
 import * as core from '@actions/core'
-import { create, UploadOptions } from '@actions/artifact'
+import client, { UploadArtifactOptions } from '@actions/artifact'
 
 export async function uploadArtifact(
   name: string,
   outputPath: string,
   files: string[]
 ): Promise<void> {
-  const artifactClient = create()
-  const options: UploadOptions = {
-    continueOnError: false,
+  const options: UploadArtifactOptions = {
     retentionDays: 0
   }
 
   core.info(`Attempting to upload ${name}...`)
-  const uploadResponse = await artifactClient.uploadArtifact(
+
+  const uploadResponse = await client.uploadArtifact(
     name,
     files,
     outputPath,
     options
   )
 
-  if (files.length === 0) {
-    core.warning(`Expected to upload ${name}, but no files were provided!`)
-  } else if (uploadResponse.failedItems.length > 0) {
-    core.warning(
-      `An error was encountered when uploading ${uploadResponse.artifactName}. There were ${uploadResponse.failedItems.length} items that failed to upload.`
-    )
-  } else {
+  if (uploadResponse.id && uploadResponse.size) {
     core.info(
-      `Artifact ${uploadResponse.artifactName} has been successfully uploaded!`
+      `Artifact ${name} has been successfully uploaded with id ${uploadResponse.id}!`
     )
+  } else if (files.length === 0) {
+    core.warning(`Expected to upload ${name}, but no files were provided!`)
+  } else {
+    core.warning(`An error was encountered when uploading ${name}.`)
   }
 }

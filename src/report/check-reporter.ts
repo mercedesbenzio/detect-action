@@ -16,10 +16,7 @@ export class CheckReporter implements Reporter {
     return result.join('\n')
   }
 
-  private readonly gitHubCheck: GitHubCheck
-  constructor(gitHubCheck: GitHubCheck) {
-    this.gitHubCheck = gitHubCheck
-  }
+  constructor(private readonly gitHubCheck: GitHubCheck) {}
 
   async report(data: ReportResult): Promise<void> {
     if (data.failed) {

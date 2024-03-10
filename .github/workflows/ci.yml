@@ -2,10 +2,14 @@ name: Continuous Integration
 
 on:
   pull_request:
+    branches:
+      - main
   push:
     branches:
       - main
-      - 'releases/*'
+
+permissions:
+  contents: read
 
 jobs:
   test-typescript:
@@ -19,9 +23,9 @@ jobs:
 
       - name: Setup Node.js
         id: setup-node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version-file: .node-version
           cache: npm
 
       - name: Install Dependencies
@@ -53,7 +57,7 @@ jobs:
 #        id: test-action
 #        uses: ./
 #        with:
-#          milliseconds: 1000
+#          milliseconds: 2000
 #
 #      - name: Print Output
 #        id: output

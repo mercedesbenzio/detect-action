@@ -18,11 +18,9 @@ const HEADER_ALIGNMENT = '|-|-|-|-|-|-|'
 export class BlackDuckReportGenerator
   implements ReportGenerator<ReportProperties, ReportResult>
 {
-  private readonly blackDuckScanReportGenerator: BlackDuckScanReportGenerator
-
-  constructor(blackDuckScanReportGenerator: BlackDuckScanReportGenerator) {
-    this.blackDuckScanReportGenerator = blackDuckScanReportGenerator
-  }
+  constructor(
+    private readonly blackDuckScanReportGenerator: BlackDuckScanReportGenerator
+  ) {}
 
   private makeReportLine(line: ReportLine): string {
     return `| ${line.policiesViolated} | ${line.dependency} | ${line.licenses} | ${line.vulnerabilities} | ${line.shortTermRecommendedUpgrade} | ${line.longTermRecommendedUpdate} |`

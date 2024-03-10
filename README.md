@@ -22,7 +22,7 @@
 > 
 > In this fork we decided to continue the developments on detect-action, which focus only on Black Duck tool.
 
-> ⚠️ From v0.4.0 onwards this action is only compatible with detect v8
+> ⚠️ From v0.4.0 onwards this action requires to be executed with detect v8 or above.
 
 ![GitHub tag (latest SemVer)][github-tag]
 
@@ -82,9 +82,9 @@ jobs:
     runs-on: my-github-runner
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Set up Java 17
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
@@ -103,7 +103,7 @@ jobs:
           policy-name: 'My Black Duck Policy For GitHub Actions'
           no-fail-if-policy-exists: true
       - name: Run Synopsys Detect
-        uses: tvcsantos/detect-action@v1
+        uses: tvcsantos/detect-action@v2
         env:
           NODE_EXTRA_CA_CERTS: ${{ secrets.LOCAL_CA_CERT_PATH }}
         with:
@@ -134,7 +134,7 @@ To do this:
 
     ```yaml
         - name: Run Synopsys Detect
-          uses: tvcsantos/detect-action@v1
+          uses: tvcsantos/detect-action@v2
           env:
             NODE_EXTRA_CA_CERTS: /certificates/my_custom_cert.pem
           with:
@@ -177,7 +177,7 @@ Action step:
 
 ```yaml
     - name: Run Synopsys Detect
-      uses: tvcsantos/detect-action@v1
+      uses: tvcsantos/detect-action@v2
       env:
         NODE_EXTRA_CA_CERTS: ./my-cert.pem
       with:
@@ -189,7 +189,7 @@ Action step:
 Checkout the source-code onto your GitHub Runner with the following _step_:
 
 ```yaml
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 ```
 
 ### Build Your Project
@@ -213,7 +213,7 @@ Detect runs using Java. Configure the _step_ it as follows:
 
 ```yaml
     - name: Set up JDK 17
-      uses: actions/setup-java@v3
+      uses: actions/setup-java@v4
       with:
         java-version: '17'
         distribution: 'temurin'
@@ -273,7 +273,7 @@ Set the scan mode to:
     push:
   #...
       - name: Run Synopsys Detect
-        uses: tvcsantos/detect-action@v1
+        uses: tvcsantos/detect-action@v2
         env:
           NODE_EXTRA_CA_CERTS: ${{ secrets.LOCAL_CA_CERT_PATH }}
         with:
@@ -294,7 +294,7 @@ Set the scan mode to:
       - cron:  '0 0 * * *'
   #...
       - name: Run Synopsys Detect
-        uses: tvcsantos/detect-action@v1
+        uses: tvcsantos/detect-action@v2
         env:
           NODE_EXTRA_CA_CERTS: ${{ secrets.LOCAL_CA_CERT_PATH }}
         with:
@@ -313,7 +313,7 @@ See also: [Detect Documentation of Rapid Scan][rapid-scan-documentation].
 #### Additional Action Parameters
 
 - `output-path-override`: Override for where to output Detect files
-  - Default: $RUNNER_TEMP/blackduck/
+  - Default: `$RUNNER_TEMP/blackduck/`
 
 #### Additional Detect Properties
 
@@ -325,7 +325,7 @@ Passing additional [Detect properties][detect-properties-documentation] can be d
 
     ```yaml
         - name: Synopsys Detect
-          uses: tvcsantos/detect-action@v1
+          uses: tvcsantos/detect-action@v2
           env:
             DETECT_TOOLS: DOCKER
             DETECT_DOCKER_IMAGE_ID: abc123
@@ -340,7 +340,7 @@ Passing additional [Detect properties][detect-properties-documentation] can be d
 
     ```yaml
         - name: Synopsys Detect
-          uses: tvcsantos/detect-action@v1
+          uses: tvcsantos/detect-action@v2
           env:
             SPRING_APPLICATION_JSON: '{"detect.tools":"DOCKER","detect.docker.image.id":"abc123","detect.docker.path.required":"TRUE"}'
           with:
@@ -380,7 +380,7 @@ Notes:
 
 ```yaml
   - name: Synopsys Detect
-    uses: tvcsantos/detect-action@v1
+    uses: tvcsantos/detect-action@v2
     env:
       NODE_EXTRA_CA_CERTS: ${{ secrets.LOCAL_CA_CERT_PATH }}
     with:

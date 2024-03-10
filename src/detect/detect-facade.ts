@@ -26,34 +26,24 @@ import { ExtendedContext } from '../github/extended-context'
 const MAX_REPORT_SIZE = 65535
 
 export class DetectFacade {
-  private readonly applicationName: string
-  private readonly detectPath: string
-  private readonly inputs: Inputs
-  private readonly gitHubCheck: GitHubCheck
   private readonly blackDuckApiService: BlackDuckApiService
-  private readonly context: ExtendedContext
 
   private readonly blackDuckReportGenerator: BlackDuckReportGenerator
   private readonly commentReporter: CommentReporter
   private readonly checkReporter: CheckReporter
 
   constructor(
-    applicationName: string,
-    inputs: Inputs,
-    detectPath: string,
-    gitHubCheck: GitHubCheck,
+    private readonly applicationName: string,
+    private readonly inputs: Inputs,
+    private readonly detectPath: string,
+    private readonly gitHubCheck: GitHubCheck,
     octokit: InstanceType<typeof GitHub>,
-    context: ExtendedContext
+    private readonly context: ExtendedContext
   ) {
-    this.applicationName = applicationName
-    this.inputs = inputs
-    this.detectPath = detectPath
-    this.gitHubCheck = gitHubCheck
     this.blackDuckApiService = new BlackDuckApiService(
       this.inputs.blackDuckUrl,
       this.inputs.blackDuckApiToken
     )
-    this.context = context
     this.commentReporter = new CommentReporter(
       new GitHubPRCommenter(this.applicationName, octokit, context)
     )
