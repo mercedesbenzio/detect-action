@@ -21,8 +21,7 @@
 > support for several Synopsys tools not focusing only on Black Duck.
 >
 > In this fork we decided to continue the developments on detect-action, which focus only on Black Duck tool.
-
-
+>
 > ⚠️ From v0.4.0 onwards this action requires to be executed with detect v8 or above.
 
 ![GitHub tag (latest SemVer)][github-tag]
