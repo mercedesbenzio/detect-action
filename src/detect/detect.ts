@@ -1,10 +1,7 @@
 import { exec } from '@actions/exec'
 
 export class Detect {
-  private readonly path: string
-  constructor(path: string) {
-    this.path = path
-  }
+  constructor(private readonly path: string) {}
 
   async run(args: string[]): Promise<number> {
     const detectArguments = ['-jar', this.path].concat(args)

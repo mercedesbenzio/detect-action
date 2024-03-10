@@ -76,5 +76,5 @@ outputs:
   detect-exit-code-name:
     description: 'The corresponding human name of the error code'
 runs:
-  using: 'node16'
+  using: 'node20'
   main: 'dist/index.js'

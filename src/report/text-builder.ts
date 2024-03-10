@@ -1,11 +1,8 @@
 export class TextBuilder {
-  private readonly maxSize?: number
   private lines: string[] = []
   private sizeUpperBound = 0
 
-  constructor(maxSize?: number) {
-    this.maxSize = maxSize
-  }
+  constructor(private readonly maxSize?: number) {}
 
   addLines(...lines: string[]): void {
     this.doAddLines(lines, true)

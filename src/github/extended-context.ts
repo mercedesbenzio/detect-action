@@ -37,7 +37,7 @@ export function extendContext(context: Context): ExtendedContext {
 
   result.getCurrentBranchName = () => context.ref.replace(REFS_REGEX, '')
 
-  result.getCurrentCommitId = (short: number) => {
+  result.getCurrentCommitId = (short: boolean) => {
     let commitId = context.sha
     if (short) commitId = commitId.substring(0, 7)
     return commitId

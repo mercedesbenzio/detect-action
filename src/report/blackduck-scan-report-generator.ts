@@ -23,11 +23,7 @@ const FILE_ENCODING = 'utf-8'
 export class BlackDuckScanReportGenerator
   implements ReportGenerator<void, BlackDuckScanReport>
 {
-  private readonly blackDuckApiService: BlackDuckApiService
-
-  constructor(blackDuckApiService: BlackDuckApiService) {
-    this.blackDuckApiService = blackDuckApiService
-  }
+  constructor(private readonly blackDuckApiService: BlackDuckApiService) {}
 
   async generateReport(path: string): Promise<BlackDuckScanReport> {
     const data = await fs.readFile(path, FILE_ENCODING)
