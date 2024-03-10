@@ -15,12 +15,13 @@
 # Detect Action
 
 > ℹ️ This action is a fork from [`synopsys-sig/detect-action`][synopsys-sig-detect-action].
-> 
+>
 > The repository from synopsys is no longer maintained and was deprecated in favour of a new action
 > [`synopsys-sig/synopsys-action`][synopsys-sig-synopys-action], which is built on top of Synopsys Bridge and has
 > support for several Synopsys tools not focusing only on Black Duck.
-> 
+>
 > In this fork we decided to continue the developments on detect-action, which focus only on Black Duck tool.
+
 
 > ⚠️ From v0.4.0 onwards this action requires to be executed with detect v8 or above.
 
