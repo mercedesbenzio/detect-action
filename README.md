@@ -353,10 +353,10 @@ Passing additional [Detect properties][detect-properties-documentation] can be d
 
     Please refer to the [Detect documentation on this topic][detect-properties-options] for more information.
 
-#### Detect Diagnostic Zip
+#### Detect Diagnostic ZIP
 
 When passing the properties `DETECT_DIAGNOSTIC` or `DETECT_DIAGNOSTIC_EXTENDED` as environment variables, the action
-will helpfully upload the zip as a build artifact for convenient troubleshooting. Note: These properties must be set
+will helpfully upload the ZIP as a build artifact for convenient troubleshooting. Note: These properties must be set
 to `true` or `false` (rather than `1`) when using the action.
 
 #### Detect Exit Code output

@@ -40,7 +40,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Re-add `fail-on-all-policy-severities` input
-- Change log level on debug to another key
+- Changelog level on debug to another key
 - Auto-enable diagnostic mode when debug mode is enabled
 - Add `fail-if-detect-fails` input to propagate detect error as action failure
 

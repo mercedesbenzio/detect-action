@@ -149,7 +149,7 @@ Once you've filed the PR:
 - If the maintainer asks for any changes, edit your changes, push, and ask for
   another review.
 - If the maintainer decides to pass on your PR, they will thank you for the
-  contribution and explain why they won't be accepting the changes. That's ok!
+  contribution and explain why they won't be accepting the changes. That's OK!
   We still really appreciate you taking the time to do it, and we don't take
   that lightly. 💚
 - If your PR gets accepted, it will be marked as such, and merged into the
@@ -193,7 +193,7 @@ Once you've filed the PR:
   another review. Additional tags (such as `needs-tests`) will be added
   depending on the review.
 - If the maintainer decides to pass on your PR, they will thank you for the
-  contribution and explain why they won't be accepting the changes. That's ok!
+  contribution and explain why they won't be accepting the changes. That's OK!
   We still really appreciate you taking the time to do it, and we don't take
   that lightly. 💚
 - If your PR gets accepted, it will be marked as such, and merged into the
@@ -230,7 +230,7 @@ Some notes on picking up support issues:
 - As much as possible, try to refer to past issues with accepted answers. Link
   to them from your replies with the `#123` format.
 - Be kind and patient with users -- often, folks who have run into confusing
-  things might be upset or impatient. This is ok. Try to understand where
+  things might be upset or impatient. This is OK. Try to understand where
   they're coming from, and if you're too uncomfortable with the tone, feel free
   to stay away or withdraw from the issue. (note: if the user is outright
   hostile or is violating the CoC, [refer to the Code of Conduct](CODE_OF_CONDUCT.md)
