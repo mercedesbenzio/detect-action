@@ -42893,10 +42893,6 @@ class DetectFacade {
         if (this.inputs.scanMode === constants_1.RAPID_SCAN) {
             hasPolicyViolations = await this.processRapidScanResult(failureConditionsMet, outputPath);
         }
-        if (this.isDiagnosticModeEnabled()) {
-            const diagnosticZip = await this.getDiagnosticFilesPaths(outputPath);
-            await (0, upload_artifacts_1.uploadArtifact)('Detect Diagnostic Zip', outputPath, diagnosticZip);
-        }
         return hasPolicyViolations;
     }
     async hasEnabledBlackDuckPolicy() {
@@ -42931,6 +42927,11 @@ class DetectFacade {
         core.setOutput(outputs_1.Output.DETECT_EXIT_CODE, detectExitCode);
         core.setOutput(outputs_1.Output.DETECT_EXIT_CODE_NAME, exitCodeName);
         core.info(`${detect_tool_downloader_1.TOOL_NAME} exited with code ${detectExitCode} - ${exitCodeName}.`);
+        // always process diagnostics regardless of exit code
+        if (this.isDiagnosticModeEnabled()) {
+            const diagnosticZip = await this.getDiagnosticFilesPaths(outputPath);
+            await (0, upload_artifacts_1.uploadArtifact)('Detect Diagnostic Zip', outputPath, diagnosticZip);
+        }
         const isSuccessOrPolicyFailure = detectExitCode === exit_code_1.ExitCode.SUCCESS ||
             detectExitCode === exit_code_1.ExitCode.FAILURE_POLICY_VIOLATION;
         if (isSuccessOrPolicyFailure) {
