@@ -43482,11 +43482,10 @@ async function run() {
 // eslint-disable-next-line github/no-then
 run().catch(error => {
     core.error(error);
-    if (error instanceof Error) {
-        if (error.stack)
-            core.error(error.stack);
-        core.setFailed(error.message);
-    }
+    // TypeError is not a decendant class of Error (instanceof)
+    if (error.stack)
+        core.error(error.stack);
+    core.setFailed(error.message);
 });
 
 

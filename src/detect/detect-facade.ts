@@ -191,11 +191,6 @@ export class DetectFacade {
       )
     }
 
-    if (this.isDiagnosticModeEnabled()) {
-      const diagnosticZip = await this.getDiagnosticFilesPaths(outputPath)
-      await uploadArtifact('Detect Diagnostic Zip', outputPath, diagnosticZip)
-    }
-
     return hasPolicyViolations
   }
 
@@ -253,6 +248,12 @@ export class DetectFacade {
     core.info(
       `${TOOL_NAME} exited with code ${detectExitCode} - ${exitCodeName}.`
     )
+
+    // always process diagnostics regardless of exit code
+    if (this.isDiagnosticModeEnabled()) {
+      const diagnosticZip = await this.getDiagnosticFilesPaths(outputPath)
+      await uploadArtifact('Detect Diagnostic Zip', outputPath, diagnosticZip)
+    }
 
     const isSuccessOrPolicyFailure =
       detectExitCode === ExitCode.SUCCESS ||
