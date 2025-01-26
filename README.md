@@ -12,6 +12,11 @@
 [synopsys-sig-detect-action]: https://github.com/synopsys-sig/detect-action
 [synopsys-sig-synopys-action]: https://github.com/synopsys-sig/synopsys-action
 
+> 🚨 **DEPRECATION NOTICE**
+>
+> This repository is no longer mantained. As a replacement please use the oficial GitHub action provided by
+> Black Duck @ https://github.com/blackduck-inc/black-duck-security-scan
+
 # Detect Action
 
 > ℹ️ This action is a fork from [`synopsys-sig/detect-action`][synopsys-sig-detect-action].
